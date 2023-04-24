@@ -1,9 +1,6 @@
 import numpy as np
 import graphviz
 
-a, b, c, d = 0, 0, 0, 0
-used_nodes = []
-
 
 def dfs(matrix):
     visited = set()
