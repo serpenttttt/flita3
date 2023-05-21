@@ -2,15 +2,15 @@ import numpy as np
 import graphviz
 
 
-def dfs(matrix):
-    visited = set()
-    column = 0
+def dfs(matrix, column, visited):
+
     for i in range(len(set_edges)):
-        if matrix[i][column] == '1' and column + 1 != len(set_nodes):
+        if matrix[i][column] == '1' and column + 1 != len(set_nodes) or matrix[i][column] == '-1' and column + 1 != len(set_nodes):
             visited.add(str(column + 1))
             for j in range(column + 1, len(set_nodes)):
-                if matrix[i][j] == '1':
+                if matrix[i][j] == '1' or matrix[i][j] == '-1':
                     visited.add(str(j + 1))
+                    dfs(matrix, j, visited)
 
     if visited == set_nodes:
         return True
@@ -61,6 +61,12 @@ for string_of_nodes in matrix:
                 if (str(j + 1) + str(i + 1)) in set_edges:
                     simple_graph = False
                 one_node = False
+            else:
+                if (string_of_nodes[i] == '1' and string_of_nodes[j] == '-1') or (string_of_nodes[i] == '-1' and string_of_nodes[j] == '1'):
+                    set_edges.append(str(j + 1) + str(i + 1))
+                    if (str(i + 1) + str(j + 1)) in set_edges:
+                        simple_graph = False
+                    one_node = False
     if one_node:
         simple_graph = False
         for i in range(len(string_of_nodes)):
@@ -76,10 +82,20 @@ dot.render('doctest-output/round-table.gv', view=True)
 if simple_graph:
     if (nodes - 1) * (nodes - 2) / 2 < len(set_edges):
         print("The Graph is linked")
+    # Перепроверка графа на связность
+    else:
+        column = 0
+        visited = set()
+        if dfs(matrix, column, visited) is True:
+            print("The Graph is linked")
+        else:
+            print("The Graph is not linked")
 
-# Проверка графа на связность, если он не простой
+# Проверка графа на связность, если он не простой 
 else:
-    if dfs(matrix) is True:
+    column = 0
+    visited = set()
+    if dfs(matrix, column, visited) is True:
         print("The Graph is linked")
     else:
         print("The Graph is not linked")
